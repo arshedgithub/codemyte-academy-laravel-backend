@@ -8,3 +8,5 @@ Route::get('/test', function () {
 });
 
 Route::apiResource('courses', CourseController::class);
+
+// Route::post('register',  )

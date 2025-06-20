@@ -13,7 +13,8 @@ class CoursePolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        // Allow all users to view courses
+        return true;
     }
 
     /**
@@ -21,7 +22,8 @@ class CoursePolicy
      */
     public function view(User $user, Course $course): bool
     {
-        return false;
+        // Allow all users to view a course
+        return true;
     }
 
     /**
@@ -29,7 +31,8 @@ class CoursePolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        // Only admin can create courses
+        return $user->role === 'admin';
     }
 
     /**
@@ -37,7 +40,8 @@ class CoursePolicy
      */
     public function update(User $user, Course $course): bool
     {
-        return false;
+        // Only admin can update courses
+        return $user->role === 'admin';
     }
 
     /**
@@ -45,7 +49,8 @@ class CoursePolicy
      */
     public function delete(User $user, Course $course): bool
     {
-        return false;
+        // Only admin can delete courses
+        return $user->role === 'admin';
     }
 
     /**
