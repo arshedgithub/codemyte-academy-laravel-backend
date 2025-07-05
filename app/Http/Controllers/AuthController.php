@@ -47,11 +47,26 @@ class AuthController extends Controller
             ];
         }
         
-        $token = $user->createToken($user->username);
+        // Get device info (optional)
+        $deviceInfo = $request->header('User-Agent', 'Unknown Device');
+        $tokenName = $user->username . ' - ' . substr($deviceInfo, 0, 50);
+        
+        // Delete old tokens if user has more than 1 (keeping max 2 total)
+        $existingTokens = $user->tokens()->count();
+        if ($existingTokens >= 2) {
+            // Delete the oldest token
+            $oldestToken = $user->tokens()->orderBy('created_at', 'asc')->first();
+            if ($oldestToken) {
+                $oldestToken->delete();
+            }
+        }
+        
+        $token = $user->createToken($tokenName);
 
         return [
             'user' => $user,
-            'token' => $token->plainTextToken
+            'token' => $token->plainTextToken,
+            'active_sessions' => $user->tokens()->count()
         ];
     }
 
@@ -60,6 +75,29 @@ class AuthController extends Controller
 
         return [
             "message" => "You are logged out"
+        ];
+    }
+
+    public function sessions(Request $request){
+        $tokens = $request->user()->tokens()->select('id', 'name', 'created_at', 'last_used_at')->get();
+        
+        return [
+            'active_sessions' => $tokens,
+            'total_sessions' => $tokens->count()
+        ];
+    }
+
+    public function revokeSession(Request $request, $tokenId){
+        $token = $request->user()->tokens()->find($tokenId);
+        
+        if (!$token) {
+            return response()->json(['message' => 'Session not found'], 404);
+        }
+        
+        $token->delete();
+        
+        return [
+            'message' => 'Session revoked successfully'
         ];
     }
 }

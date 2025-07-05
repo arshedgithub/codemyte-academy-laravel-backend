@@ -15,4 +15,6 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/sessions', [AuthController::class, 'sessions']);
+    Route::delete('/sessions/{tokenId}', [AuthController::class, 'revokeSession']);
 });
