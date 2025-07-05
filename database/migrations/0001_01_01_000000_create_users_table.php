@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('contact')->nullable();
             $table->string('whatsapp_number')->nullable();
             $table->enum('status', ['active', 'inactive', 'suspended'])->default('active');
-            $table->enum('role', ['user', 'admin'])->default('user');
+            $table->enum('role', ['student', 'admin', 'instructor'])->default('student');
             $table->rememberToken();
             $table->timestamps();
         });
