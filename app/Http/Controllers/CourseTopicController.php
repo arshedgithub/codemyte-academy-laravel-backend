@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use App\Models\CourseTopic;
-use Illuminate\Http\Request;
+use App\Http\Requests\CourseTopicsRequests\StoreCourseTopicRequest;
+use App\Http\Requests\CourseTopicsRequests\UpdateCourseTopicRequest;
 
 class CourseTopicController extends Controller
 {
@@ -22,23 +23,12 @@ class CourseTopicController extends Controller
     /**
      * Store a newly created topic in storage.
      */
-    public function store(Request $request, Course $course)
+    public function store(StoreCourseTopicRequest $request, Course $course)
     {
-        $this->authorize('update', $course); // Only admin can add topics to courses
+        $data = $request->validated();
+        $data['course_id'] = $course->id;
         
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'recording_url' => 'nullable|url|max:500',
-            'class_link' => 'nullable|url|max:500',
-            'content' => 'nullable|string',
-            'order' => 'nullable|integer|min:0',
-            'is_active' => 'boolean',
-        ]);
-
-        $validated['course_id'] = $course->id;
-        
-        $topic = CourseTopic::create($validated);
+        $topic = CourseTopic::create($data);
         
         return response()->json(['topic' => $topic], 201);
     }
@@ -58,25 +48,14 @@ class CourseTopicController extends Controller
     /**
      * Update the specified topic in storage.
      */
-    public function update(Request $request, Course $course, CourseTopic $topic)
+    public function update(UpdateCourseTopicRequest $request, Course $course, CourseTopic $topic)
     {
-        $this->authorize('update', $course); // Only admin can update topics
-        
         if ($topic->course_id !== $course->id) {
             return response()->json(['message' => 'Topic not found for this course'], 404);
         }
         
-        $validated = $request->validate([
-            'title' => 'sometimes|string|max:255',
-            'description' => 'nullable|string',
-            'recording_url' => 'nullable|url|max:500',
-            'class_link' => 'nullable|url|max:500',
-            'content' => 'nullable|string',
-            'order' => 'nullable|integer|min:0',
-            'is_active' => 'boolean',
-        ]);
-        
-        $topic->update($validated);
+        $data = $request->validated();
+        $topic->update($data);
         
         return response()->json(['topic' => $topic]);
     }
