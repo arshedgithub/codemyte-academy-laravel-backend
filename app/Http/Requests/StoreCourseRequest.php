@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Course;
 
 class StoreCourseRequest extends FormRequest
 {
@@ -11,8 +12,7 @@ class StoreCourseRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // Allow all users for now; adjust as needed for your app's logic
-        return true;
+        return $this->user()->can('create', Course::class);
     }
 
     /**
@@ -21,9 +21,10 @@ class StoreCourseRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
-    {
+    {  
         return [
             'title' => ['required', 'string', 'max:255'],
+            'course_code' => ['required', 'string', 'max:6', 'unique:courses'],
             'instructor' => ['required', 'string', 'max:255'],
             'image' => ['nullable', 'string', 'max:255'],
             'is_free' => ['required', 'boolean'],

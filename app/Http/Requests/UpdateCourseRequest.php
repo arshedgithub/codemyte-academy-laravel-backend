@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Course;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateCourseRequest extends FormRequest
@@ -11,8 +12,7 @@ class UpdateCourseRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // Allow all users for now; adjust as needed for your app's logic
-        return true;
+        return $this->user()->can('update', $this->route('course'));
     }
 
     /**
@@ -24,6 +24,7 @@ class UpdateCourseRequest extends FormRequest
     {
         return [
             'title' => ['sometimes', 'string', 'max:255'],
+            'course_code' => ['sometimes', 'string', 'max:6', 'unique:courses,course_code,' . $this->route('course')->id],
             'instructor' => ['sometimes', 'string', 'max:255'],
             'image' => ['nullable', 'string', 'max:255'],
             'is_free' => ['sometimes', 'boolean'],
