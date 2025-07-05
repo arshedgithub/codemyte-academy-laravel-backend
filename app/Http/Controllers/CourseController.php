@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
-use App\Http\Requests\StoreCourseRequest;
-use App\Http\Requests\UpdateCourseRequest;
+use App\Http\Requests\CourseRequests\StoreCourseRequest;
+use App\Http\Requests\CourseRequests\UpdateCourseRequest;
 
 class CourseController extends Controller
 {
@@ -22,10 +22,6 @@ class CourseController extends Controller
     public function store(StoreCourseRequest $request)
     {
         $data = $request->validated();
-
-        if (isset($data['topics']) && is_array($data['topics'])) {
-            $data['topics'] = array_values($data['topics']);
-        }
         $course = Course::create($data);
         return response()->json(['course' => $course], 201);
     }
@@ -44,9 +40,6 @@ class CourseController extends Controller
     public function update(UpdateCourseRequest $request, Course $course)
     {
         $data = $request->validated();
-        if (isset($data['topics']) && is_array($data['topics'])) {
-            $data['topics'] = array_values($data['topics']);
-        }
         $course->update($data);
         return response()->json(['course' => $course]);
     }

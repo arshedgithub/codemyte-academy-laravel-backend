@@ -16,7 +16,7 @@ class AuthController extends Controller
             "contact" => "required|max:255|unique:users",
             "whatsapp_number" => "required|max:255|unique:users",
             "email" => "required|email|unique:users",
-            "password" => "required|confirmed"
+            "password" => "required|min:8|confirmed"
         ]);
 
         $user = User::create([

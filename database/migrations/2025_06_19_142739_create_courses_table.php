@@ -22,7 +22,6 @@ return new class extends Migration
             $table->text('description');
             $table->string('duration')->nullable();
             $table->string('level')->nullable();
-            $table->json('topics')->nullable();
             $table->string('syllabus_pdf')->nullable();
             $table->timestamps();
         });

@@ -25,7 +25,14 @@ class Course extends Model
         'description',
         'duration',
         'level',
-        'topics',
         'syllabus_pdf',
     ];
+
+    /**
+     * Get the topics for the course.
+     */
+    public function topics()
+    {
+        return $this->hasMany(CourseTopic::class)->orderBy('order');
+    }
 }
