@@ -25,7 +25,10 @@ class AuthController extends Controller
             'role' => 'student',
         ]);
 
-        $token = $user->createToken($user->username);
+        $deviceInfo = $request->header('User-Agent', 'Unknown Device');
+        $tokenName = $user->username . ' - ' . substr($deviceInfo, 0, 50);
+
+        $token = $user->createToken($tokenName);
 
         return [
             'user' => $user,
