@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CourseTopicController;
+use App\Http\Controllers\CourseEnrollmentController;
 
 Route::get('/test', function () {
     return 'test laravel api';
@@ -32,8 +33,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/courses/{course}/topics', [CourseTopicController::class, 'store']);
     Route::put('/courses/{course}/topics/{topic}', [CourseTopicController::class, 'update']);
     Route::delete('/courses/{course}/topics/{topic}', [CourseTopicController::class, 'destroy']);
-    
+  
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/profile', [AuthController::class, 'profile']);
     Route::get('/sessions', [AuthController::class, 'sessions']);
     Route::delete('/sessions/{tokenId}', [AuthController::class, 'revokeSession']);
 });

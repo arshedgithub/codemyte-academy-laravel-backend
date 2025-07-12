@@ -21,6 +21,7 @@ class AuthController extends Controller
 
         $user = User::create([
             ...$fields,
+            'reg_no' => User::generateRegNo(),
             'status' => 'active',
             'role' => 'student',
         ]);
@@ -101,6 +102,16 @@ class AuthController extends Controller
         
         return [
             'message' => 'Session revoked successfully'
+        ];
+    }
+
+    public function profile(Request $request){
+        $user = $request->user();
+        
+        return [
+            'user' => $user,
+            'enrollment_count' => $user->courseEnrollments()->count(),
+            'approved_enrollments' => $user->approvedEnrollments()->count()
         ];
     }
 }
